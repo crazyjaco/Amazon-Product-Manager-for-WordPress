@@ -1,0 +1,110 @@
+#apm-search {
+	background-color: #fff;
+}
+
+#apm-search p.subtext {
+	margin-top: 2px;
+}
+
+#apm-search-results {
+	border: 1px #dfdfdf solid;
+	margin: 0 0 5px 0;
+	background: #fff;
+	overflow: auto;
+	position: relative;
+}
+
+#apm-search-results li.odd {
+	background-color: #F9F9F9;
+}
+
+#apm-search-results li {
+	clear: both;
+	margin-bottom: 0;
+	border-bottom: 1px solid #f1f1f1;
+	color: #333;
+	padding: 4px 6px;
+	position: relative;
+}
+
+#apm-search-results a, #apm-search-results a:hover {
+	text-decoration: none;
+}
+
+#apm-search-results li:hover {
+	background: #eaf2fa;
+	color: #151515;
+}
+
+#apm-search-results .item-title {
+	display: inline-block;
+	margin: 2px 8px;
+	width: 50%;
+	font-size: 12px;
+	text-decoration: none;
+	vertical-align: top;
+}
+#apm-search-results .item-info {
+	text-transform: uppercase;
+	color: #666;
+	font-size: 11px;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+	bottom: 0;
+}
+
+#apm-search-form #apm-search-query {
+	width: 100%;
+}
+
+.post-selector .image-large,
+.post-selector .image-medium {
+	margin: 10px 0 0;
+}
+
+.post-selector {
+	background: url(../images/meta_box_gradient.png) repeat-x 0 0;
+	border-top: 1px dotted #dfdfdf;
+	padding: 0 12px 16px 12px;
+}
+
+.post-selector:after {
+	display:block;
+	clear:both;
+	content:" ";
+	height:0;
+	overflow:hidden;
+}
+
+.post-selector.first {
+	background: none;
+	border: none;
+}
+
+.post-selector .hide {
+	display: none;
+}
+
+.post-selector h5 {
+	font-weight: normal;
+	margin: 0 0 3px;
+	font-size: 11px;
+}
+
+.post-selector .image {
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+.post-selector .image-thumbnail {
+	margin: 0 0 6px;
+}
+
+.apm-title {
+	width: 60%;
+}
+
+.post-selector .label {
+	line-height: 14px;
+}
