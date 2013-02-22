@@ -7,8 +7,8 @@ jQuery( function($){
 		modal: true,
 		title: 'Select Product',
 		open: function() {
-			//$(this).scrollTop(0);
-			//$('#bu_post_search_query').focus();
+			$(this).scrollTop(0);
+			$('#apm_search_query').focus();
 			//getPosts();
 		},
 		buttons: {
@@ -17,7 +17,7 @@ jQuery( function($){
 			}
 		},
 		close: function() {
-			$activeSelector = null;
+			//$activeSelector = null;
 		}
 	});
 
@@ -27,7 +27,8 @@ jQuery( function($){
 		$('#apm-search').dialog('open');
 	}
 
-	$('#open-search-dialog').on('click', openAPMSearch);
+	var $postSelectors = $('#apm-search');
+	$postSelectors.find('.replace').on('click', openAPMSearch);
 
 
 });
