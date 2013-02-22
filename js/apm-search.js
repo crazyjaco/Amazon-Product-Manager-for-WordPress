@@ -21,5 +21,14 @@ jQuery( function($){
 		}
 	});
 
+	var openAPMSearch = function(e){
+		e.preventDefault();
+		$('#apm-search-query').val('Enter ASIN, ISBN, or Search Term');
+		$('#apm-search').dialog('open');
+	}
+
+	$('#open-search-dialog').on('click', openAPMSearch);
+
+
 });
 

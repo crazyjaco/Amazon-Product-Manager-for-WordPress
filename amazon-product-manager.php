@@ -69,6 +69,7 @@ function apm_admin_scripts($hook_suffix) {
 	
 	wp_enqueue_style('apm-search-selector', plugins_url('/css/apm-search-selector.css', __FILE__));
 	wp_enqueue_style('wp-jquery-ui-dialog');
+	wp_enqueue_style('apm-jquery-custom-ui', plugins_url('/css/smoothness/jquery-ui-1.8.14.custom.css', __FILE__));
 	add_action('admin_footer', 'apm_search_selector_admin_footer');
 
 }
