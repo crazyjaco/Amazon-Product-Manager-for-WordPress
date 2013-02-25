@@ -9,7 +9,6 @@ jQuery( function($){
 		open: function() {
 			$(this).scrollTop(0);
 			$('#apm_search_query').focus();
-			//getPosts();
 		},
 		buttons: {
 			Cancel: function() {
@@ -27,9 +26,46 @@ jQuery( function($){
 		$('#apm-search').dialog('open');
 	}
 
-	var $postSelectors = $('#apm-search');
-	$postSelectors.find('.replace').on('click', openAPMSearch);
+	var $productInfoBox = $('#apm-product');
+	$productInfoBox.find('.replace').on('click', openAPMSearch);
 
+	var showResults = function(results) {
+		$results = $('#apm-search-results');
+		if(results == null) {
+			$results.find('').html('<li>No Products Found.</li>');
+		} else {
+			addResults(results);
+		}
+	}
+
+	var addResults = function(results) {
+		$results = $('#apm-search-results');
+
+	}
+
+	var getProducts = function(searchQuery, page) {
+
+		fetchingPosts = true;
+
+		if(!page) {
+			page = 1;
+		}
+
+		var data = {
+			nonce: nonce,
+			action: apm_get_products,
+			page: page
+		};
+
+		$.post(ajaxurl, data, function(results){
+			if(page == 1){
+				showResults(results);
+			} else {
+				addResults(results);
+			}
+		}, 'json');
+
+	}
 
 });
 

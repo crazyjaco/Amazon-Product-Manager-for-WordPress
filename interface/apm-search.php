@@ -9,6 +9,6 @@
 				<button class="submit">Submit</button>
 			</fieldset>
 		</form>
-		<div id="apm-search-results"></div>
+		<ul id="apm-search-results"></ul>
 	</div>
 </div> 

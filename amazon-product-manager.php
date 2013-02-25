@@ -103,7 +103,116 @@ function apm_meta_box($post, $box) {
 	include('interface/meta-box.php');
 }
 
+/**
+ * Ajax call to Amazon API
+ *
+ */
+function apm_ajax_get_products() {
+	//global $post;
+
+	require_once 'lib/AmazonECS.class.php';
+/*
+	if( !isset( AWS_API_KEY ) ) return;
+
+	if( !isset( AWS_API_SECRET_KEY ) ) return;
+
+	if( !isset( AWS_LANGUAGE ) ) return;
+
+	if( !isset( AWS_ASSOCIATE_TAG ) ) return;
+*/
+	$search_query = isset($_POST['s']) ? $_POST['s'] : '';
+	$search_cat   = isset($_POST['cat']) ? $_POST['cat'] : 'All';
+	$search_page  = isset($_POST['page']) ? $_POST['page'] : 1;
+
+	$amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG);
+
+	$amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
+ 	
+ 	$response = $amazonEcs->category($search_cat)->responseGroup('Small, Images')->page($search_page)->search($search_query);
 
 
+	header('Content-type: application/json');
+	echo json_encode($reponse);
+	die();
+
+}
+
+add_action('wp_ajax_apm_get_products', 'apm_ajax_get_posts');
+
+
+/*
+ * Register option settings for the plugin
+ *
+register_setting( 'apm-settings-amazon-info', 'AWS_API_KEY', 'sanitize_AWS');
+register_setting( 'apm-settings-amazon-info', 'AWS_API_SECRET_KEY', 'sanitize_AWS');
+register_setting( 'apm-settings-amazon-info', 'AWS_LANGUAGE', 'sanitize_AWS');
+register_setting( 'apm-settings-amazon-info', 'AWS_ASSOCIATE_TAG', 'sanitize_AWS');
+*/
+
+
+/*****
+ *
+ * Add to Settings menu in Admin panel to get to plugin's options
+ *
+ *****/
+function apm_add_options_page(){
+	// @params ('new page title', 'admin menu text', 'capabilities', 'unique plugin id for querystring', 'callback to content of page')
+	add_options_page('Amazon Product Manager Options', 'Amazon Product Manager', 'manage_options', 'amazon-product-manager', 'apm_create_options_page');
+}
+
+add_action( 'admin_menu', 'apm_add_options_page');
+
+/*
+ * Register the settings group, section and fields
+ */
+function apm_register_plugin_options(){
+	// @params ('group name - must match settings_fields()', 'name to save option under - array name', 'callback for validation')
+	register_setting('apm_options', 'apm_options' , 'apm_sanitize_options');
+	// @params ('unique id for section', 'title of section for output', 'callback to create section contents', 'page name - must match do_settings_sections function call')
+	add_settings_section('apm_aws_section', 'Amazon Web Services Account Information', 'apm_create_aws_section', 'amazon_product_manager');
+	// @params ('unique id for field', 'field title', 'callback to display input element', 'page name - must match do_settings_sections', 'settings section id to place field in')
+	add_settings_field('apm_aws_api_key', 'AWS API Key', 'create_field_apm_aws_api_key', 'amazon_product_manager', 'apm_aws_section');
+
+}
+
+add_action( 'admin_init', 'apm_register_plugin_options');
+
+/*
+ * Add field inputs
+ */
+function create_field_apm_aws_api_key() {
+	$options = get_option('apm_options');
+	echo "<input id='apm_aws_api_key' name='apm_options[apm_aws_api_key]' size='40' type='text' value='{$options['apm_aws_api_key']}' />";
+}
+
+/*
+ * Create Settings sections
+ */
+function apm_create_aws_section(){
+	echo '<p>Amazon Web Service Account Information</p>';
+}
+
+
+/*
+ * Add Settings page, itself
+ */
+function apm_create_options_page() {
+
+	?>
+	<div>
+		<h2>Amazon Product Manager Options</h2>
+		<form method="post" action="options.php">
+
+			<?php settings_fields('apm_options'); ?>
+			<?php do_settings_sections('amazon_product_manager'); ?>
+
+			<input type="Submit" type="submit" value=<?php esc_attr_e('Save Changes'); ?>" />
+
+		</form>
+	</div>
+
+	<?php
+
+}
 
 ?>
