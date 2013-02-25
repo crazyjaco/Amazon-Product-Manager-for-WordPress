@@ -167,12 +167,14 @@ add_action( 'admin_menu', 'apm_add_options_page');
  */
 function apm_register_plugin_options(){
 	// @params ('group name - must match settings_fields()', 'name to save option under - array name', 'callback for validation')
-	register_setting('apm_options', 'apm_options' , 'apm_sanitize_options');
+	register_setting('apm_options', 'apm_options' , 'apm_validate_options');
 	// @params ('unique id for section', 'title of section for output', 'callback to create section contents', 'page name - must match do_settings_sections function call')
 	add_settings_section('apm_aws_section', 'Amazon Web Services Account Information', 'apm_create_aws_section', 'amazon_product_manager');
 	// @params ('unique id for field', 'field title', 'callback to display input element', 'page name - must match do_settings_sections', 'settings section id to place field in')
 	add_settings_field('apm_aws_api_key', 'AWS API Key', 'create_field_apm_aws_api_key', 'amazon_product_manager', 'apm_aws_section');
-
+	add_settings_field('apm_aws_api_secret_key', 'AWS API Secret Key', 'create_field_apm_aws_api_secret_key', 'amazon_product_manager', 'apm_aws_section');
+	add_settings_field('apm_aws_language', 'AWS Language', 'create_field_apm_aws_language', 'amazon_product_manager', 'apm_aws_section');
+	add_settings_field('apm_aws_associate_tag', 'AWS Associate Tag', 'create_field_apm_aws_associate_tag', 'amazon_product_manager', 'apm_aws_section');
 }
 
 add_action( 'admin_init', 'apm_register_plugin_options');
@@ -185,6 +187,34 @@ function create_field_apm_aws_api_key() {
 	echo "<input id='apm_aws_api_key' name='apm_options[apm_aws_api_key]' size='40' type='text' value='{$options['apm_aws_api_key']}' />";
 }
 
+function create_field_apm_aws_api_secret_key() {
+	$options = get_option('apm_options');
+	echo "<input id='apm_aws_api_secret_key' name='apm_options[apm_aws_api_secret_key]' size='40' type='text' value='{$options['apm_aws_api_secret_key']}' />";
+}
+
+function create_field_apm_aws_language() {
+	$options = get_option('apm_options');
+	$selected = isset($options['apm_aws_language']) ? $options['apm_aws_language'] : '';
+	echo "<select id='apm_aws_language' name='apm_options[apm_aws_language]'>";
+	?>
+		<option value="de" <?php echo ('de' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >DE</option>
+		<option value="com" <?php echo ('com' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >USA</option>
+		<option value="co.uk" <?php echo ('co.uk' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >ENG</option>
+		<option value="ca" <?php echo ('ca' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >CA</option>
+		<option value="fr" <?php echo ('fr' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >FR</option>
+		<option value="co.jp" <?php echo ('co.jp' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >JP</option>
+		<option value="it" <?php echo ('it' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >IT</option>
+		<option value="cn" <?php echo ('cn' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >CN</option>
+		<option value="es" <?php echo ('es' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >ES</option>
+    </select>
+    <?php
+}
+
+function create_field_apm_aws_associate_tag(){
+	$options = get_option('apm_options');
+	echo "<input id='apm_aws_associate_tag' name='apm_options[apm_aws_associate_tag]' size='40' type='text' value='{$options['apm_aws_associate_tag']}' />";
+}
+
 /*
  * Create Settings sections
  */
@@ -192,6 +222,14 @@ function apm_create_aws_section(){
 	echo '<p>Amazon Web Service Account Information</p>';
 }
 
+/*
+ * Validate the inputs
+ */
+function apm_validate_options($input) {
+	//$options = get_option('apm-options');
+	return $input;
+
+}
 
 /*
  * Add Settings page, itself
