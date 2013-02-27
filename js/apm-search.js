@@ -1,4 +1,6 @@
 jQuery( function($){
+	var nonce = $('#apm-search').find('[name="nonce"]').val();
+	var page = 1;
 
 	$('#apm-search').dialog({
 		autoOpen: true,
@@ -29,6 +31,15 @@ jQuery( function($){
 	var $productInfoBox = $('#apm-product');
 	$productInfoBox.find('.replace').on('click', openAPMSearch);
 
+	var doAPMSearch = function(e){
+		e.preventDefault();
+				console.log('got here.');
+		getProducts( $(this).parent().find('#apm-search-query').val(), $(this).parent().find('#apm-search-cat').val() , 1 );
+	}
+
+	var $productSearchBox = $('#apm-search-form');
+	$productSearchBox.find('.search').on('click', doAPMSearch);
+
 	var showResults = function(results) {
 		$results = $('#apm-search-results');
 		if(results == null) {
@@ -43,7 +54,7 @@ jQuery( function($){
 
 	}
 
-	var getProducts = function(searchQuery, page) {
+	var getProducts = function(searchQuery, searchCat, page) {
 
 		fetchingPosts = true;
 
@@ -53,11 +64,18 @@ jQuery( function($){
 
 		var data = {
 			nonce: nonce,
-			action: apm_get_products,
+			action: 'apm_get_products',
+			category: searchCat,
 			page: page
 		};
 
+		if(searchQuery){
+			data.s = searchQuery;
+			console.log(searchQuery);
+		}
+
 		$.post(ajaxurl, data, function(results){
+			console.dir(results);
 			if(page == 1){
 				showResults(results);
 			} else {

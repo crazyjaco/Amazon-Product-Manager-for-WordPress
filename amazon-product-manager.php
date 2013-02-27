@@ -109,45 +109,41 @@ function apm_meta_box($post, $box) {
  */
 function apm_ajax_get_products() {
 	//global $post;
+	$options = get_option('apm_options');
+
+	define('AWS_API_KEY' , $options['apm_aws_api_key']);
+	define('AWS_API_SECRET_KEY', $options['apm_aws_api_secret_key']);
+	define('AWS_LANGUAGE', $options['apm_aws_language']);
+	define('AWS_ASSOCIATE_TAG', $options['apm_aws_associate_tag']);
 
 	require_once 'lib/AmazonECS.class.php';
-/*
-	if( !isset( AWS_API_KEY ) ) return;
 
-	if( !isset( AWS_API_SECRET_KEY ) ) return;
-
-	if( !isset( AWS_LANGUAGE ) ) return;
-
-	if( !isset( AWS_ASSOCIATE_TAG ) ) return;
-*/
-	$search_query = isset($_POST['s']) ? $_POST['s'] : '';
-	$search_cat   = isset($_POST['cat']) ? $_POST['cat'] : 'All';
+	$search_query = isset($_POST['s']) ? trim(strip_tags($_POST['s'])) : '';
+	$search_cat   = isset($_POST['category']) ? $_POST['category'] : 'All';
 	$search_page  = isset($_POST['page']) ? $_POST['page'] : 1;
+
+	//update_option('apm_test_container', AWS_API_KEY);
 
 	$amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG);
 
 	$amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
- 	
- 	$response = $amazonEcs->category($search_cat)->responseGroup('Small, Images')->page($search_page)->search($search_query);
+ 	try {
+ 	$response = $amazonEcs->category($search_cat)->responseGroup('Small')->page($search_page)->search($search_query);
 
+	update_option('apm_test_container', $response);
 
 	header('Content-type: application/json');
 	echo json_encode($reponse);
+} catch (Exception $err) {
+	update_option('apm_test_container', $err);
+}
 	die();
 
 }
 
-add_action('wp_ajax_apm_get_products', 'apm_ajax_get_posts');
+add_action('wp_ajax_apm_get_products', 'apm_ajax_get_products');
 
 
-/*
- * Register option settings for the plugin
- *
-register_setting( 'apm-settings-amazon-info', 'AWS_API_KEY', 'sanitize_AWS');
-register_setting( 'apm-settings-amazon-info', 'AWS_API_SECRET_KEY', 'sanitize_AWS');
-register_setting( 'apm-settings-amazon-info', 'AWS_LANGUAGE', 'sanitize_AWS');
-register_setting( 'apm-settings-amazon-info', 'AWS_ASSOCIATE_TAG', 'sanitize_AWS');
-*/
 
 
 /*****
