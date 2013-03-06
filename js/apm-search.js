@@ -66,9 +66,9 @@ jQuery( function($){
 				var productgroup = this.ItemAttributes.ProductGroup;
 				var manufacturer = this.ItemAttributes.Manufacturer;
 				
-				resultItem = '<li><span class="apm-search-result-thumbnail"><img src="' + thumb + '"/></span>';
-				resultItem = resultItem + '<span class="apm-search-results-title">' + itemtitle + '</span>';
-				resultItem = resultItem + '<span class="apm-search-result-product-group">' + productgroup + '</span></li>';
+				resultItem = '<li><span class="item-thumbnail"><img src="' + thumb + '"/></span>';
+				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
+				resultItem = resultItem + '<span class="item-info">' + productgroup + '</span></li>';
 				$('#apm-search-results').append(resultItem);
 			});
 		}
