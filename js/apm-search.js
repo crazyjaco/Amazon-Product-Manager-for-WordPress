@@ -50,7 +50,28 @@ jQuery( function($){
 	}
 
 	var addResults = function(results) {
-		$results = $('#apm-search-results');
+		//$results = ;
+		console.dir(results);
+		console.log('results.Items.Request.IsValid :' + results.Items.Request.IsValid );
+		//$('#apm-search-results').append();
+		// Check for falsey return value
+		if( false == results.Items.Request.IsValid ) {
+			console.log('Error: ' + results.Items.Request.Errors[0].message);
+		} else {
+			console.log('Else: ' + results);
+			$(results.Items.Item).each( function(index, value) {
+				//var thumb = this.ImageSets.ImageSet.ThumbnailImage.URL ? this.ImageSets.ImageSet.ThumbnailImage.URL : '';
+				var thumb = this.SmallImage.URL;
+				var itemtitle = this.ItemAttributes.Title;
+				var productgroup = this.ItemAttributes.ProductGroup;
+				var manufacturer = this.ItemAttributes.Manufacturer;
+				
+				resultItem = '<li><span class="apm-search-result-thumbnail"><img src="' + thumb + '"/></span>';
+				resultItem = resultItem + '<span class="apm-search-results-title">' + itemtitle + '</span>';
+				resultItem = resultItem + '<span class="apm-search-result-product-group">' + productgroup + '</span></li>';
+				$('#apm-search-results').append(resultItem);
+			});
+		}
 
 	}
 

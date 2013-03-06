@@ -128,14 +128,16 @@ function apm_ajax_get_products() {
 
 	$amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
  	try {
- 	$response = $amazonEcs->category($search_cat)->responseGroup('Small')->page($search_page)->search($search_query);
+ 	$response = $amazonEcs->category($search_cat)->responseGroup('Small,Images')->page($search_page)->search($search_query);
 
-	update_option('apm_test_container', $response);
+	//update_option('apm_test_container', $response);
 
 	header('Content-type: application/json');
-	echo json_encode($reponse);
+	//echo json_encode($response['Items']);
+	echo json_encode($response);
+	//update_option('apm_test_container', json_encode($response['Items']));
 } catch (Exception $err) {
-	update_option('apm_test_container', $err);
+	update_option('apm_test_container', $err->getMessage());
 }
 	die();
 
