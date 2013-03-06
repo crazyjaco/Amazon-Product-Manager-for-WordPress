@@ -42,6 +42,7 @@ jQuery( function($){
 
 	var showResults = function(results) {
 		$results = $('#apm-search-results');
+		$results.empty();
 		if(results == null) {
 			$results.find('').html('<li>No Products Found.</li>');
 		} else {
