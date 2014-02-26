@@ -9,7 +9,7 @@ class Amazon_Product_Manager {
 	// Create Singleton instance of plugin
 	private static $instance = false;
 
-	function instance(){
+	public static function instance(){
 		if ( ! self::$instance ){
 			self::$instance = new Amazon_Product_Manager;
 		}
