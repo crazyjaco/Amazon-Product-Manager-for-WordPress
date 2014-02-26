@@ -17,7 +17,7 @@ class Amazon_Product_Manager {
 	}
 
 	function __construct(){
-		add_action( 'init', 'action_create_product_post_type' );
+		add_action( 'init', array( $this, 'action_create_product_post_type' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'apm_admin_scripts' ), 10, 1 );
 		add_action( 'add_meta_boxes', array( $this, 'apm_add_meta_box' ) , 10, 2 );
 		add_action( 'wp_ajax_apm_get_products', array( $this, 'apm_ajax_get_products' ) );
@@ -165,7 +165,7 @@ class Amazon_Product_Manager {
 	 *****/
 	function apm_add_options_page(){
 		// @params ('new page title', 'admin menu text', 'capabilities', 'unique plugin id for querystring', 'callback to content of page')
-		add_options_page( 'Amazon Product Manager Options', 'Amazon Product Manager', 'manage_options', 'amazon-product-manager', 'apm_create_options_page' );
+		add_options_page( 'Amazon Product Manager Options', 'Amazon Product Manager', 'manage_options', 'amazon-product-manager', array( $this, 'apm_create_options_page' ) );
 	}
 
 
@@ -177,12 +177,12 @@ class Amazon_Product_Manager {
 		// @params ('group name - must match settings_fields()', 'name to save option under - array name', 'callback for validation')
 		register_setting( 'apm_options', 'apm_options' , 'apm_validate_options' );
 		// @params ('unique id for section', 'title of section for output', 'callback to create section contents', 'page name - must match do_settings_sections function call')
-		add_settings_section( 'apm_aws_section', 'Amazon Web Services Account Information', 'apm_create_aws_section', 'amazon_product_manager' );
+		add_settings_section( 'apm_aws_section', 'Amazon Web Services Account Information', array( $this, 'apm_create_aws_section' ), 'amazon_product_manager' );
 		// @params ('unique id for field', 'field title', 'callback to display input element', 'page name - must match do_settings_sections', 'settings section id to place field in')
-		add_settings_field( 'apm_aws_api_key', 'AWS API Key', 'create_field_apm_aws_api_key', 'amazon_product_manager', 'apm_aws_section' );
-		add_settings_field( 'apm_aws_api_secret_key', 'AWS API Secret Key', 'create_field_apm_aws_api_secret_key', 'amazon_product_manager', 'apm_aws_section' );
-		add_settings_field( 'apm_aws_language', 'AWS Language', 'create_field_apm_aws_language', 'amazon_product_manager', 'apm_aws_section' );
-		add_settings_field( 'apm_aws_associate_tag', 'AWS Associate Tag', 'create_field_apm_aws_associate_tag', 'amazon_product_manager', 'apm_aws_section' );
+		add_settings_field( 'apm_aws_api_key', 'AWS API Key', array( $this, 'create_field_apm_aws_api_key' ), 'amazon_product_manager', 'apm_aws_section' );
+		add_settings_field( 'apm_aws_api_secret_key', 'AWS API Secret Key', array( $this, 'create_field_apm_aws_api_secret_key' ), 'amazon_product_manager', 'apm_aws_section' );
+		add_settings_field( 'apm_aws_language', 'AWS Language', array( $this, 'create_field_apm_aws_language' ), 'amazon_product_manager', 'apm_aws_section' );
+		add_settings_field( 'apm_aws_associate_tag', 'AWS Associate Tag', array( $this, 'create_field_apm_aws_associate_tag' ), 'amazon_product_manager', 'apm_aws_section' );
 	}
 
 
