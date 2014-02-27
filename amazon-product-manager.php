@@ -82,7 +82,7 @@ class Amazon_Product_Manager {
 		if ( ! ( $post_type === 'apm_products' ) ) return;
 
 		wp_enqueue_script( 'apm-search-selector', plugins_url( '/js/apm-search.js', __FILE__ ), array( 'jquery-ui-dialog' ), '1.0', true );
-		
+		wp_localize_script( 'apm-search-selector', 'apm_search', array( 'apm_image_path' => plugins_url( '/img/', __FILE__ ) ) );
 		wp_enqueue_style( 'apm-search-selector', plugins_url( '/css/apm-search-selector.css', __FILE__ ) );
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_style( 'apm-jquery-custom-ui', plugins_url( '/css/smoothness/jquery-ui-1.8.14.custom.css' , __FILE__ ) );
@@ -175,7 +175,7 @@ class Amazon_Product_Manager {
 	 */
 	function apm_register_plugin_options(){
 		// @params ('group name - must match settings_fields()', 'name to save option under - array name', 'callback for validation')
-		register_setting( 'apm_options', 'apm_options' , array( $this, 'apm_validate_options') );
+		register_setting( 'apm_options', 'apm_options' , array( $this, 'apm_validate_options' ) );
 		// @params ('unique id for section', 'title of section for output', 'callback to create section contents', 'page name - must match do_settings_sections function call')
 		add_settings_section( 'apm_aws_section', 'Amazon Web Services Account Information', array( $this, 'apm_create_aws_section' ), 'amazon_product_manager' );
 		// @params ('unique id for field', 'field title', 'callback to display input element', 'page name - must match do_settings_sections', 'settings section id to place field in')

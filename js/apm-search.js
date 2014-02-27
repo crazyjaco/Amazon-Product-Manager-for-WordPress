@@ -1,7 +1,7 @@
 jQuery( function($){
 	var nonce = $('#apm-search').find('[name="nonce"]').val();
 	var page = 1;
-	var noImageURL = "../img/noImage.gif";
+	var noImageURL = apm_search.apm_image_path + "noImage.gif";
 
 	$('#apm-search').dialog({
 		autoOpen: true,
