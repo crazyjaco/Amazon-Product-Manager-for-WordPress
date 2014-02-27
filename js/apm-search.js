@@ -1,6 +1,7 @@
 jQuery( function($){
 	var nonce = $('#apm-search').find('[name="nonce"]').val();
 	var page = 1;
+	var noImageURL = "../img/noImage.gif";
 
 	$('#apm-search').dialog({
 		autoOpen: true,
@@ -57,15 +58,15 @@ jQuery( function($){
 		//$('#apm-search-results').append();
 		// Check for falsey return value
 		if( false == results.Items.Request.IsValid ) {
-			console.log('Error: ' + results.Items.Request.Errors[0].message);
+			console.log('Error: ', results.Items.Request.Errors[0].message);
 		} else {
-			console.log('Else: ' + results);
+			console.log('Else: ', results);
 			$(results.Items.Item).each( function(index, value) {
 				//var thumb = this.ImageSets.ImageSet.ThumbnailImage.URL ? this.ImageSets.ImageSet.ThumbnailImage.URL : '';
-				var thumb = this.SmallImage.URL;
-				var itemtitle = this.ItemAttributes.Title;
-				var productgroup = this.ItemAttributes.ProductGroup;
-				var manufacturer = this.ItemAttributes.Manufacturer;
+				var thumb 			= this.hasOwnProperty('SmallImage') ? this.SmallImage.URL : noImageURL;
+				var itemtitle 		= this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '';
+				var productgroup 	= this.ItemAttributes.hasOwnProperty('ProductGroup') ? this.ItemAttributes.ProductGroup : '';
+				var manufacturer 	= this.ItemAttributes.hasOwnProperty('Manufacturer') ? this.ItemAttributes.Manufacturer : '';
 				
 				resultItem = '<li><span class="item-thumbnail"><img src="' + thumb + '"/></span>';
 				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
