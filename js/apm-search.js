@@ -6,7 +6,7 @@ jQuery( function($){
 		autoOpen: true,
 		height: 400,
 		width: 640,
-		modal: true,
+		modal: false,
 		title: 'Select Product',
 		open: function() {
 			$(this).scrollTop(0);

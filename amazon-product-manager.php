@@ -102,7 +102,7 @@ class Amazon_Product_Manager {
 
 
 	function apm_add_meta_box( $post_type, $post ) {
-		add_meta_box( 'apm-product', 'Product Information', 'apm_meta_box', 'apm_products', 'normal', 'high' );
+		add_meta_box( 'apm-product', 'Product Information', array( $this, 'apm_meta_box' ), 'apm_products', 'normal', 'high' );
 	}
 
 	
@@ -175,7 +175,7 @@ class Amazon_Product_Manager {
 	 */
 	function apm_register_plugin_options(){
 		// @params ('group name - must match settings_fields()', 'name to save option under - array name', 'callback for validation')
-		register_setting( 'apm_options', 'apm_options' , 'apm_validate_options' );
+		register_setting( 'apm_options', 'apm_options' , array( $this, 'apm_validate_options') );
 		// @params ('unique id for section', 'title of section for output', 'callback to create section contents', 'page name - must match do_settings_sections function call')
 		add_settings_section( 'apm_aws_section', 'Amazon Web Services Account Information', array( $this, 'apm_create_aws_section' ), 'amazon_product_manager' );
 		// @params ('unique id for field', 'field title', 'callback to display input element', 'page name - must match do_settings_sections', 'settings section id to place field in')
@@ -201,18 +201,19 @@ class Amazon_Product_Manager {
 
 	function create_field_apm_aws_language() {
 		$options  = get_option( 'apm_options' );
+		error_log( print_r( $options, true ) );
 		$selected = isset($options['apm_aws_language']) ? $options['apm_aws_language'] : '';
 		echo "<select id='apm_aws_language' name='apm_options[apm_aws_language]'>";
 		?>
-			<option value="de" <?php echo ('de' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >DE</option>
-			<option value="com" <?php echo ('com' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >USA</option>
-			<option value="co.uk" <?php echo ('co.uk' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >ENG</option>
-			<option value="ca" <?php echo ('ca' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >CA</option>
-			<option value="fr" <?php echo ('fr' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >FR</option>
-			<option value="co.jp" <?php echo ('co.jp' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >JP</option>
-			<option value="it" <?php echo ('it' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >IT</option>
-			<option value="cn" <?php echo ('cn' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >CN</option>
-			<option value="es" <?php echo ('es' == $options['apm_aws_language']) ? '"SELECTED"' : '' ?> >ES</option>
+			<option value="de" <?php echo ('de' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >DE</option>
+			<option value="com" <?php echo ('com' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >USA</option>
+			<option value="co.uk" <?php echo ('co.uk' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >ENG</option>
+			<option value="ca" <?php echo ('ca' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >CA</option>
+			<option value="fr" <?php echo ('fr' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >FR</option>
+			<option value="co.jp" <?php echo ('co.jp' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >JP</option>
+			<option value="it" <?php echo ('it' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >IT</option>
+			<option value="cn" <?php echo ('cn' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >CN</option>
+			<option value="es" <?php echo ('es' == $options['apm_aws_language']) ? 'selected="SELECTED"' : '' ?> >ES</option>
 	    </select>
 	    <?php
 	}
