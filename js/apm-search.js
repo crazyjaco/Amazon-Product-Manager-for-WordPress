@@ -51,7 +51,19 @@ jQuery( function($){
 		}
 	}
 
-	var addResults = function(results) {
+	// Strips events and reapplies to newly modified search result list
+	var resetSelectEvents = function( el_id ){
+		jQuery( el_id ).find( 'li' ).off( 'click' );
+		jQuery( el_id ).find( 'li' ).on( 'click', selectResult );
+	}
+
+	// Event Handler for clicking on a search result
+	var selectResult = function( ev ) {
+		console.log( this.dataset.asin );
+	}
+
+	// Appends results from ajax call to search result list
+	var addResults = function( results ) {
 		//$results = ;
 		console.dir(results);
 		console.log('results.Items.Request.IsValid :' + results.Items.Request.IsValid );
@@ -63,21 +75,23 @@ jQuery( function($){
 			console.log('Else: ', results);
 			$(results.Items.Item).each( function(index, value) {
 				//var thumb = this.ImageSets.ImageSet.ThumbnailImage.URL ? this.ImageSets.ImageSet.ThumbnailImage.URL : '';
+				var ASIN			= this.hasOwnProperty('ASIN') ? this.ASIN : ''; // This value should always exist.
 				var thumb 			= this.hasOwnProperty('SmallImage') ? this.SmallImage.URL : noImageURL;
 				var itemtitle 		= this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '';
 				var productgroup 	= this.ItemAttributes.hasOwnProperty('ProductGroup') ? this.ItemAttributes.ProductGroup : '';
 				var manufacturer 	= this.ItemAttributes.hasOwnProperty('Manufacturer') ? this.ItemAttributes.Manufacturer : '';
 				
-				resultItem = '<li><span class="item-thumbnail"><img src="' + thumb + '"/></span>';
+				resultItem = '<li data-asin="' + ASIN + '"><span class="item-thumbnail"><img src="' + thumb + '"/></span>';
 				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
 				resultItem = resultItem + '<span class="item-info">' + productgroup + '</span></li>';
 				$('#apm-search-results').append(resultItem);
+				resetSelectEvents('#apm-search-results');
 			});
 		}
 
 	}
 
-	var getProducts = function(searchQuery, searchCat, page) {
+	var getProducts = function( searchQuery, searchCat, page ) {
 
 		fetchingPosts = true;
 
