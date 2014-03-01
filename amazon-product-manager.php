@@ -21,6 +21,7 @@ class Amazon_Product_Manager {
 		add_action( 'admin_enqueue_scripts', array( $this, 'apm_admin_scripts' ), 10, 1 );
 		add_action( 'add_meta_boxes', array( $this, 'apm_add_meta_box' ) , 10, 2 );
 		add_action( 'wp_ajax_apm_get_products', array( $this, 'apm_ajax_get_products' ) );
+		add_action( 'wp_ajax_apm_get_item', array( $this, 'apm_ajax_get_item' ) );
 		add_action( 'admin_menu', array( $this, 'apm_add_options_page' ) );
 		add_action( 'admin_init', array( $this, 'apm_register_plugin_options' ) );
 	}
@@ -136,22 +137,46 @@ class Amazon_Product_Manager {
 		$search_cat   = isset( $_POST['category'] ) ? $_POST['category'] : 'All';
 		$search_page  = isset( $_POST['page'] ) ? $_POST['page'] : 1;
 
-		//update_option('apm_test_container', AWS_API_KEY);
-
 		$amazonEcs = new AmazonECS( AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG );
 
 		$amazonEcs->returnType( AmazonECS::RETURN_TYPE_ARRAY );
 		try {
 			$response = $amazonEcs->category( $search_cat )->responseGroup( 'Small,Images' )->page( $search_page )->search( $search_query );
-
-			//update_option('apm_test_container', $response);
-
 			header( 'Content-type: application/json' );
-			//echo json_encode($response['Items']);
 			echo json_encode( $response );
-			//update_option('apm_test_container', json_encode($response['Items']));
 		} catch (Exception $err) {
-			update_option( 'apm_test_container', $err->getMessage() );
+			error_log( $err->getMessage() );
+		}
+		die();
+
+	}
+
+	// TODO: Combine ajax calls. Too much duplication of work
+	function apm_ajax_get_item() {
+		//global $post;
+		$options = get_option( 'apm_options' );
+
+		define( 'AWS_API_KEY' , $options['apm_aws_api_key'] );
+		define( 'AWS_API_SECRET_KEY', $options['apm_aws_api_secret_key'] );
+		define( 'AWS_LANGUAGE', $options['apm_aws_language'] );
+		define( 'AWS_ASSOCIATE_TAG', $options['apm_aws_associate_tag'] );
+
+		require_once 'lib/AmazonECS.class.php';
+
+		$search_asin    = isset( $_POST['asin'] ) ? trim( strip_tags( $_POST['asin'] ) ) : '';
+		//$search_query = isset( $_POST['s'] ) ? trim( strip_tags( $_POST['s'] ) ) : '';
+		//$search_cat   = isset( $_POST['category'] ) ? $_POST['category'] : 'All';
+		//$search_page  = isset( $_POST['page'] ) ? $_POST['page'] : 1;
+
+		$amazonEcs = new AmazonECS( AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG );
+
+		$amazonEcs->returnType( AmazonECS::RETURN_TYPE_ARRAY );
+		try {
+			$response = $amazonEcs->category( $search_cat )->responseGroup( 'Large,Images' )->page( $search_page )->search( $search_asin );
+			header( 'Content-type: application/json' );
+			echo json_encode( $response );
+		} catch (Exception $err) {
+			error_log( $err->getMessage() );
 		}
 		die();
 
