@@ -54,12 +54,7 @@ jQuery( function($){
 	// Strips events and reapplies to newly modified search result list
 	var resetSelectEvents = function( el_id ){
 		jQuery( el_id ).find( 'li' ).off( 'click' );
-		jQuery( el_id ).find( 'li' ).on( 'click', selectResult );
-	}
-
-	// Event Handler for clicking on a search result
-	var selectResult = function( ev ) {
-		console.log( this.dataset.asin );
+		jQuery( el_id ).find( 'li' ).on( 'click', selectProduct );
 	}
 
 	// Appends results from ajax call to search result list
@@ -110,6 +105,34 @@ jQuery( function($){
 			data.s = searchQuery;
 			console.log(searchQuery);
 		}
+
+		$.post(ajaxurl, data, function(results){
+			console.dir(results);
+			if(page == 1){
+				showResults(results);
+			} else {
+				addResults(results);
+			}
+		}, 'json');
+
+	}
+
+
+	// Event Handler for clicking on a search result
+	var selectProduct = function( ev ) {
+		console.log( this.dataset.asin );
+
+		fetchingPosts = true;
+
+		if(!page) {
+			page = 1;
+		}
+
+		var data = {
+			nonce: nonce,
+			asin: this.dataset.asin,
+			action: 'apm_get_item_info',
+		};
 
 		$.post(ajaxurl, data, function(results){
 			console.dir(results);
