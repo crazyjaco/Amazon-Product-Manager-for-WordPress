@@ -21,7 +21,7 @@ class Amazon_Product_Manager {
 		add_action( 'admin_enqueue_scripts', array( $this, 'apm_admin_scripts' ), 10, 1 );
 		add_action( 'add_meta_boxes', array( $this, 'apm_add_meta_box' ) , 10, 2 );
 		add_action( 'wp_ajax_apm_get_products', array( $this, 'apm_ajax_get_products' ) );
-		add_action( 'wp_ajax_apm_get_item', array( $this, 'apm_ajax_get_item' ) );
+		add_action( 'wp_ajax_apm_get_item_info', array( $this, 'apm_ajax_get_item_info' ) );
 		add_action( 'admin_menu', array( $this, 'apm_add_options_page' ) );
 		add_action( 'admin_init', array( $this, 'apm_register_plugin_options' ) );
 	}
@@ -152,7 +152,7 @@ class Amazon_Product_Manager {
 	}
 
 	// TODO: Combine ajax calls. Too much duplication of work
-	function apm_ajax_get_item() {
+	function apm_ajax_get_item_info() {
 		//global $post;
 		$options = get_option( 'apm_options' );
 
@@ -164,9 +164,6 @@ class Amazon_Product_Manager {
 		require_once 'lib/AmazonECS.class.php';
 
 		$search_asin    = isset( $_POST['asin'] ) ? trim( strip_tags( $_POST['asin'] ) ) : '';
-		//$search_query = isset( $_POST['s'] ) ? trim( strip_tags( $_POST['s'] ) ) : '';
-		//$search_cat   = isset( $_POST['category'] ) ? $_POST['category'] : 'All';
-		//$search_page  = isset( $_POST['page'] ) ? $_POST['page'] : 1;
 
 		$amazonEcs = new AmazonECS( AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG );
 
