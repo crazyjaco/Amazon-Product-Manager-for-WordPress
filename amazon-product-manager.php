@@ -163,13 +163,13 @@ class Amazon_Product_Manager {
 
 		require_once 'lib/AmazonECS.class.php';
 
-		$search_asin    = isset( $_POST['asin'] ) ? trim( strip_tags( $_POST['asin'] ) ) : '';
+		$search_asin = isset( $_POST['asin'] ) ? trim( strip_tags( $_POST['asin'] ) ) : '';
 
 		$amazonEcs = new AmazonECS( AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG );
 
 		$amazonEcs->returnType( AmazonECS::RETURN_TYPE_ARRAY );
 		try {
-			$response = $amazonEcs->category( $search_cat )->responseGroup( 'Large,Images' )->page( $search_page )->search( $search_asin );
+			$response = $amazonEcs->responseGroup( 'Large,Images' )->lookup( $search_asin );
 			header( 'Content-type: application/json' );
 			echo json_encode( $response );
 		} catch (Exception $err) {
