@@ -86,6 +86,11 @@ jQuery( function($){
 
 	}
 
+	var addToPost = function( results ) {
+		jQuery( '#title' ).val( results.Items.Item.ItemAttributes.Title );
+		$('#apm-search').dialog('close');
+	}
+
 	var getProducts = function( searchQuery, searchCat, page ) {
 
 		fetchingPosts = true;
@@ -136,14 +141,14 @@ jQuery( function($){
 
 		$.post(ajaxurl, data, function(results){
 			console.dir(results);
-			if(page == 1){
-				showResults(results);
-			} else {
-				addResults(results);
-			}
+			debugger;
+			addToPost(results);
+
 		}, 'json');
 
-	}
+	};
+
+
 
 });
 
