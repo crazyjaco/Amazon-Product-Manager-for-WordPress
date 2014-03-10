@@ -51,11 +51,30 @@ jQuery( function($){
 		}
 	}
 
-	// Strips events and reapplies to newly modified search result list
-	var resetSelectEvents = function( el_id ){
-		jQuery( el_id ).find( 'li' ).off( 'click' );
-		jQuery( el_id ).find( 'li' ).on( 'click', selectProduct );
-	}
+	// Apply event handler for clicking on search result
+	jQuery( "ul#apm-search-results" ).on( "click", "li", function( event ){
+		event.preventDefault();
+		console.log( this.dataset.asin );
+
+		fetchingPosts = true;
+
+		if(!page) {
+			page = 1;
+		}
+
+		var data = {
+			nonce: nonce,
+			asin: this.dataset.asin,
+			action: 'apm_get_item_info',
+		};
+
+		$.post(ajaxurl, data, function(results){
+			console.dir(results);
+			addToPost(results);
+
+		}, 'json');
+
+	} );
 
 	// Appends results from ajax call to search result list
 	var addResults = function( results ) {
@@ -80,7 +99,6 @@ jQuery( function($){
 				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
 				resultItem = resultItem + '<span class="item-info">' + productgroup + '</span></li>';
 				$('#apm-search-results').append(resultItem);
-				resetSelectEvents('#apm-search-results');
 			});
 		}
 
@@ -121,34 +139,6 @@ jQuery( function($){
 		}, 'json');
 
 	}
-
-
-	// Event Handler for clicking on a search result
-	var selectProduct = function( ev ) {
-		console.log( this.dataset.asin );
-
-		fetchingPosts = true;
-
-		if(!page) {
-			page = 1;
-		}
-
-		var data = {
-			nonce: nonce,
-			asin: this.dataset.asin,
-			action: 'apm_get_item_info',
-		};
-
-		$.post(ajaxurl, data, function(results){
-			console.dir(results);
-			debugger;
-			addToPost(results);
-
-		}, 'json');
-
-	};
-
-
 
 });
 
