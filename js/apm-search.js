@@ -58,10 +58,6 @@ jQuery( function($){
 
 		fetchingPosts = true;
 
-		if(!page) {
-			page = 1;
-		}
-
 		var data = {
 			nonce: nonce,
 			asin: this.dataset.asin,
