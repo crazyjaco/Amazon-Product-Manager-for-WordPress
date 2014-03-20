@@ -10,6 +10,7 @@ jQuery( function($){
 		modal: false,
 		title: 'Select Product',
 		open: function() {
+			console.log('opening dialog...');
 			$(this).scrollTop(0);
 			$('#apm_search_query').focus();
 		},
@@ -83,8 +84,21 @@ jQuery( function($){
 			console.log('Error: ', results.Items.Request.Errors[0].message);
 		} else {
 			console.log('Else: ', results);
+			var amazonItemCollection = new amazonSearchResultsCollection();
 			$(results.Items.Item).each( function(index, value) {
+
+				var amazonItem = new amazonItemModel({
+					id: 			this.hasOwnProperty('ASIN') ? this.ASIN : '', // This value should always exist.
+					asin: 			this.hasOwnProperty('ASIN') ? this.ASIN : '', // This value should always exist.
+					title: 			this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '',
+					productgroup: 	this.ItemAttributes.hasOwnProperty('ProductGroup') ? this.ItemAttributes.ProductGroup : '',
+					manufacturer: 	this.ItemAttributes.hasOwnProperty('Manufacturer') ? this.ItemAttributes.Manufacturer : '',
+				});
+
+				amazonItemCollection.add( amazonItem );
+
 				//var thumb = this.ImageSets.ImageSet.ThumbnailImage.URL ? this.ImageSets.ImageSet.ThumbnailImage.URL : '';
+/*
 				var ASIN			= this.hasOwnProperty('ASIN') ? this.ASIN : ''; // This value should always exist.
 				var thumb 			= this.hasOwnProperty('SmallImage') ? this.SmallImage.URL : noImageURL;
 				var itemtitle 		= this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '';
@@ -95,6 +109,7 @@ jQuery( function($){
 				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
 				resultItem = resultItem + '<span class="item-info">' + productgroup + '</span></li>';
 				$('#apm-search-results').append(resultItem);
+*/
 			});
 		}
 
