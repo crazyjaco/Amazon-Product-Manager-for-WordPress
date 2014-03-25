@@ -82,11 +82,15 @@ class Amazon_Product_Manager {
 
 		if ( ! ( $post_type === 'apm_products' ) ) return;
 
-		wp_enqueue_script( 'apm-search-selector', plugins_url( '/js/apm-search.js', __FILE__ ), array( 'jquery-ui-dialog' ), '1.0', true );
+		wp_enqueue_script( 'apm-search-selector', plugins_url( '/js/apm-search.js', __FILE__ ), array( 'jquery-ui-dialog', 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'apm-model-item', plugins_url( '/js/models/AmazonItemModel.js', __FILE__ ), array( 'backbone', 'underscore', 'jquery' ), '1.0', true );
+
 		wp_localize_script( 'apm-search-selector', 'apm_search', array( 'apm_image_path' => plugins_url( '/img/', __FILE__ ) ) );
+
 		wp_enqueue_style( 'apm-search-selector', plugins_url( '/css/apm-search-selector.css', __FILE__ ) );
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_style( 'apm-jquery-custom-ui', plugins_url( '/css/smoothness/jquery-ui-1.8.14.custom.css' , __FILE__ ) );
+
 		add_action( 'admin_footer', array( $this, 'apm_search_selector_admin_footer' ) );
 
 	}
@@ -98,6 +102,7 @@ class Amazon_Product_Manager {
 	 **/
 	function apm_search_selector_admin_footer() {
 		include('interface/apm-search.php');
+		include('tpl/SearchResultItem.html');
 	}
 
 
