@@ -73,48 +73,6 @@ jQuery( function($){
 
 	} );
 
-	// Appends results from ajax call to search result list
-	var addResults = function( results ) {
-		//$results = ;
-		console.dir(results);
-		console.log('results.Items.Request.IsValid :' + results.Items.Request.IsValid );
-		//$('#apm-search-results').append();
-		// Check for falsey return value
-		if( false == results.Items.Request.IsValid ) {
-			console.log('Error: ', results.Items.Request.Errors[0].message);
-		} else {
-			console.log('Else: ', results);
-			var amazonItemCollection = new amazonSearchResultsCollection();
-			$(results.Items.Item).each( function(index, value) {
-
-				var amazonItem = new amazonItemModel({
-					id: 			this.hasOwnProperty('ASIN') ? this.ASIN : '', // This value should always exist.
-					asin: 			this.hasOwnProperty('ASIN') ? this.ASIN : '', // This value should always exist.
-					title: 			this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '',
-					productgroup: 	this.ItemAttributes.hasOwnProperty('ProductGroup') ? this.ItemAttributes.ProductGroup : '',
-					manufacturer: 	this.ItemAttributes.hasOwnProperty('Manufacturer') ? this.ItemAttributes.Manufacturer : '',
-				});
-
-				amazonItemCollection.add( amazonItem );
-
-				//var thumb = this.ImageSets.ImageSet.ThumbnailImage.URL ? this.ImageSets.ImageSet.ThumbnailImage.URL : '';
-/*
-				var ASIN			= this.hasOwnProperty('ASIN') ? this.ASIN : ''; // This value should always exist.
-				var thumb 			= this.hasOwnProperty('SmallImage') ? this.SmallImage.URL : noImageURL;
-				var itemtitle 		= this.ItemAttributes.hasOwnProperty('Title') ? this.ItemAttributes.Title : '';
-				var productgroup 	= this.ItemAttributes.hasOwnProperty('ProductGroup') ? this.ItemAttributes.ProductGroup : '';
-				var manufacturer 	= this.ItemAttributes.hasOwnProperty('Manufacturer') ? this.ItemAttributes.Manufacturer : '';
-				
-				resultItem = '<li data-asin="' + ASIN + '"><span class="item-thumbnail"><img src="' + thumb + '"/></span>';
-				resultItem = resultItem + '<span class="item-title">' + itemtitle + '</span>';
-				resultItem = resultItem + '<span class="item-info">' + productgroup + '</span></li>';
-				$('#apm-search-results').append(resultItem);
-*/
-			});
-		}
-
-	}
-
 	var addToPost = function( results ) {
 		jQuery( '#title' ).val( results.Items.Item.ItemAttributes.Title );
 		$('#apm-search').dialog('close');
