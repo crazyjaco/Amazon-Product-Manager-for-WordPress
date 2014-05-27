@@ -1,14 +1,14 @@
-var window.amazonItemModel = Backbone.Model.extend({
+var amazonItemModel = Backbone.Model.extend({
 	defaults: { 
 		asin: -1
 	},
-	initialize: function(){}
+	initialize : function(){}
 
 
 });
 
-var window.amazonSearchResultsCollection = Backbone.Collection.extend({
-	model: amazonItemModel
+var amazonSearchResultsCollection = Backbone.Collection.extend({
+	model: amazonItemModel,
 
 	getProducts : function( searchQuery, searchCat, page ) {
 
@@ -30,7 +30,16 @@ var window.amazonSearchResultsCollection = Backbone.Collection.extend({
 			console.log(searchQuery);
 		}
 
-		$.post(ajaxurl, data, function(results){
+		var options = {
+			success: function( collection, response, options ) {
+
+			},
+			error: function( collection, response, options ) {
+				
+			}
+		}
+
+		jQuery.post(ajaxurl, data, function(results){
 			console.dir(results);
 			if(page == 1){
 				showResults(results);
@@ -39,21 +48,21 @@ var window.amazonSearchResultsCollection = Backbone.Collection.extend({
 			}
 		}, 'json');
 
-	}
+	},
 
 	// Appends results from ajax call to search result list
 	addResults : function( results ) {
 		//$results = ;
 		console.dir(results);
 		console.log('results.Items.Request.IsValid :' + results.Items.Request.IsValid );
-		//$('#apm-search-results').append();
+		//jQuery('#apm-search-results').append();
 		// Check for falsey return value
 		if( false == results.Items.Request.IsValid ) {
 			console.log('Error: ', results.Items.Request.Errors[0].message);
 		} else {
 			console.log('Else: ', results);
 			var amazonItemCollection = new amazonSearchResultsCollection();
-			$(results.Items.Item).each( function(index, value) {
+			jQuery(results.Items.Item).each( function(index, value) {
 
 				var amazonItem = new amazonItemModel({
 					id: 			this.hasOwnProperty('ASIN') ? this.ASIN : '', // This value should always exist.

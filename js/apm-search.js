@@ -2,6 +2,7 @@ jQuery( function($){
 	var nonce = $('#apm-search').find('[name="nonce"]').val();
 	var page = 1;
 	var noImageURL = apm_search.apm_image_path + "noImage.gif";
+	var searchResultsCollection = new amazonSearchResultsCollection;
 
 	$('#apm-search').dialog({
 		autoOpen: true,
@@ -34,9 +35,14 @@ jQuery( function($){
 	$productInfoBox.find('.replace').on('click', openAPMSearch);
 
 	var doAPMSearch = function(e){
+		var searchQuery;
+		var searchCat;
+		searchQuery = $(this).parent().find('#apm-search-query').val()
+		searchCat 	= $(this).parent().find('#apm-search-cat').val()
+
 		e.preventDefault();
 				console.log('got here.');
-		getProducts( $(this).parent().find('#apm-search-query').val(), $(this).parent().find('#apm-search-cat').val() , 1 );
+		searchResultsCollection.getProducts( searchQuery, searchCat , 1 );
 	}
 
 	var $productSearchBox = $('#apm-search-form');
