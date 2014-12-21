@@ -17,13 +17,13 @@ class Amazon_Product_Manager {
 	}
 
 	function __construct(){
-		add_action( 'init', array( $this, 'action_create_product_post_type' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'apm_admin_scripts' ), 10, 1 );
-		add_action( 'add_meta_boxes', array( $this, 'apm_add_meta_box' ) , 10, 2 );
-		add_action( 'wp_ajax_apm_get_products', array( $this, 'apm_ajax_get_products' ) );
+		add_action( 'init',                      array( $this, 'action_create_product_post_type' ) );
+		add_action( 'admin_enqueue_scripts',     array( $this, 'apm_admin_scripts' ), 10, 1 );
+		add_action( 'add_meta_boxes',            array( $this, 'apm_add_meta_box' ) , 10, 2 );
+		add_action( 'wp_ajax_apm_get_products',  array( $this, 'apm_ajax_get_products' ) );
 		add_action( 'wp_ajax_apm_get_item_info', array( $this, 'apm_ajax_get_item_info' ) );
-		add_action( 'admin_menu', array( $this, 'apm_add_options_page' ) );
-		add_action( 'admin_init', array( $this, 'apm_register_plugin_options' ) );
+		add_action( 'admin_menu',                array( $this, 'apm_add_options_page' ) );
+		add_action( 'admin_init',                array( $this, 'apm_register_plugin_options' ) );
 	}
 
 	/**
@@ -82,15 +82,13 @@ class Amazon_Product_Manager {
 
 		if ( ! ( $post_type === 'apm_products' ) ) return;
 
-		wp_enqueue_script( 'apm-search-selector', plugins_url( '/js/apm-search.js', __FILE__ ), array( 'jquery-ui-dialog', 'jquery' ), '1.0', true );
-		wp_enqueue_script( 'apm-model-item', plugins_url( '/js/models/AmazonItemModel.js', __FILE__ ), array( 'backbone', 'underscore', 'jquery' ), '1.0', true );
 
-		wp_localize_script( 'apm-search-selector', 'apm_search', array( 'apm_image_path' => plugins_url( '/img/', __FILE__ ) ) );
-
-		wp_enqueue_style( 'apm-search-selector', plugins_url( '/css/apm-search-selector.css', __FILE__ ) );
+		wp_enqueue_script( 'apm-search-selector', plugins_url( '/js/apm-search.js', __FILE__ ), array( 'jquery-ui-dialog', 'jquery' ),       '1.0', true );
+		wp_enqueue_script( 'apm-model-item',      plugins_url( '/js/apm-app.js', __FILE__ ),    array( 'backbone', 'underscore', 'jquery' ), '1.0', true );
+		wp_enqueue_style( 'apm-search-selector',  plugins_url( '/css/apm-search-selector.css',  __FILE__ ) );
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_style( 'apm-jquery-custom-ui', plugins_url( '/css/smoothness/jquery-ui-1.8.14.custom.css' , __FILE__ ) );
-
+		wp_localize_script( 'apm-search-selector', 'apm_search', array( 'apm_image_path' => plugins_url( '/img/', __FILE__ ) ) );
 		add_action( 'admin_footer', array( $this, 'apm_search_selector_admin_footer' ) );
 
 	}
@@ -128,6 +126,9 @@ class Amazon_Product_Manager {
 	 *
 	 */
 	function apm_ajax_get_products() {
+		if ( WP_DEBUG ) {
+			error_log( 'ajax call made!' );
+		}
 		//global $post;
 		$options = get_option( 'apm_options' );
 
@@ -138,15 +139,22 @@ class Amazon_Product_Manager {
 
 		require_once 'lib/AmazonECS.class.php';
 
-		$search_query = isset( $_POST['s'] ) ? trim( strip_tags( $_POST['s'] ) ) : '';
-		$search_cat   = isset( $_POST['category'] ) ? $_POST['category'] : 'All';
-		$search_page  = isset( $_POST['page'] ) ? $_POST['page'] : 1;
+		$search_query = isset( $_GET['s'] ) ? trim( strip_tags( $_GET['s'] ) ) : '';
+		$search_cat   = isset( $_GET['category'] ) ? $_GET['category'] : 'All';
+		$search_page  = isset( $_GET['page'] ) ? $_GET['page'] : 1;
+
+		if ( WP_DEBUG ) {
+			error_log( 'query:' . $search_query );
+			error_log( 'cat: ' . $search_cat );
+			error_log( 'page: ' . $search_page );
+		}
 
 		$amazonEcs = new AmazonECS( AWS_API_KEY, AWS_API_SECRET_KEY, AWS_LANGUAGE, AWS_ASSOCIATE_TAG );
 
 		$amazonEcs->returnType( AmazonECS::RETURN_TYPE_ARRAY );
 		try {
 			$response = $amazonEcs->category( $search_cat )->responseGroup( 'Small,Images' )->page( $search_page )->search( $search_query );
+			error_log( print_r( $response , true ) );
 			header( 'Content-type: application/json' );
 			echo json_encode( $response );
 		} catch (Exception $err) {
@@ -218,12 +226,12 @@ class Amazon_Product_Manager {
 	 */
 	function create_field_apm_aws_api_key() {
 		$options = get_option( 'apm_options' );
-		echo "<input id='apm_aws_api_key' name='apm_options[apm_aws_api_key]' size='40' type='text' value='{$options['apm_aws_api_key']}' />";
+		echo "<input id='apm_aws_api_key' name='apm_options[apm_aws_api_key]' size='40' type='text' value='" . esc_attr( $options['apm_aws_api_key'] ) . "' />";
 	}
 
 	function create_field_apm_aws_api_secret_key() {
 		$options = get_option( 'apm_options' );
-		echo "<input id='apm_aws_api_secret_key' name='apm_options[apm_aws_api_secret_key]' size='40' type='text' value='{$options['apm_aws_api_secret_key']}' />";
+		echo "<input id='apm_aws_api_secret_key' name='apm_options[apm_aws_api_secret_key]' size='40' type='text' value='" . esc_attr( $options['apm_aws_api_secret_key'] ) . "' />";
 	}
 
 	function create_field_apm_aws_language() {
@@ -247,7 +255,7 @@ class Amazon_Product_Manager {
 
 	function create_field_apm_aws_associate_tag(){
 		$options = get_option( 'apm_options' );
-		echo "<input id='apm_aws_associate_tag' name='apm_options[apm_aws_associate_tag]' size='40' type='text' value='{$options['apm_aws_associate_tag']}' />";
+		echo "<input id='apm_aws_associate_tag' name='apm_options[apm_aws_associate_tag]' size='40' type='text' value='" . esc_attr( $options['apm_aws_associate_tag'] ) . "' />";
 	}
 
 	/*

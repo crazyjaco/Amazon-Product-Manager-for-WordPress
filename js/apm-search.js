@@ -2,7 +2,10 @@ jQuery( function($){
 	var nonce = $('#apm-search').find('[name="nonce"]').val();
 	var page = 1;
 	var noImageURL = apm_search.apm_image_path + "noImage.gif";
-	var searchResultsCollection = new amazonSearchResultsCollection;
+
+	// Instantiate Collection of Models
+	var searchResultsCollection = new AmazonProductManager.Collections.SearchResults();
+	var searchResultListView = new AmazonProductManager.Views.SearchResultList( { 'collection': searchResultsCollection } );
 
 	$('#apm-search').dialog({
 		autoOpen: true,
@@ -11,7 +14,6 @@ jQuery( function($){
 		modal: false,
 		title: 'Select Product',
 		open: function() {
-			console.log('opening dialog...');
 			$(this).scrollTop(0);
 			$('#apm_search_query').focus();
 		},
@@ -41,43 +43,11 @@ jQuery( function($){
 		searchCat 	= $(this).parent().find('#apm-search-cat').val()
 
 		e.preventDefault();
-				console.log('got here.');
 		searchResultsCollection.getProducts( searchQuery, searchCat , 1 );
 	}
 
 	var $productSearchBox = $('#apm-search-form');
 	$productSearchBox.find('.search').on('click', doAPMSearch);
-
-	var showResults = function(results) {
-		$results = $('#apm-search-results');
-		$results.empty();
-		if(results == null) {
-			$results.find('').html('<li>No Products Found.</li>');
-		} else {
-			addResults(results);
-		}
-	}
-
-	// Apply event handler for clicking on search result
-	jQuery( "ul#apm-search-results" ).on( "click", "li", function( event ){
-		event.preventDefault();
-		console.log( this.dataset.asin );
-
-		fetchingPosts = true;
-
-		var data = {
-			nonce: nonce,
-			asin: this.dataset.asin,
-			action: 'apm_get_item_info',
-		};
-
-		$.post(ajaxurl, data, function(results){
-			console.dir(results);
-			addToPost(results);
-
-		}, 'json');
-
-	} );
 
 	var addToPost = function( results ) {
 		jQuery( '#title' ).val( results.Items.Item.ItemAttributes.Title );

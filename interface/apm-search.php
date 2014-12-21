@@ -10,6 +10,18 @@
 				<button class="submit search">Submit</button>
 			</fieldset>
 		</form>
-		<ul id="apm-search-results" class="apm-search-results"></ul>
+		<div id="apm-search-list-container"></div>
 	</div>
 </div> 
+
+<script type="text/template" id="apm-search-result-list-template" class="template">
+	<ul id="apm-search-results" class="apm-search-results"></ul>
+</script>
+
+<script type="text/template" id="apm-search-result-template" class="template">
+	<li data-asin="<%= ASIN %>">
+		<span class="item-thumbnail"><img src="<%= SmallImage.URL %>"/></span>
+		<span class="item-title"><%= ItemAttributes.Title %></span>
+		<span class="item-info"><%= ItemAttributes.ProductGroup %></span>
+	</li>
+</script>
