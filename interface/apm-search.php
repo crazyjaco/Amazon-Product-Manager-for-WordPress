@@ -19,9 +19,8 @@
 </script>
 
 <script type="text/template" id="apm-search-result-template" class="template">
-	<li data-asin="<%= ASIN %>">
+	<!--ASIN: <%= ASIN %>-->
 		<span class="item-thumbnail"><img src="<%= SmallImage.URL %>"/></span>
 		<span class="item-title"><%= ItemAttributes.Title %></span>
 		<span class="item-info"><%= ItemAttributes.ProductGroup %></span>
-	</li>
 </script>
