@@ -111,11 +111,11 @@ AmazonProductManager.Views.SearchResultItem = Backbone.View.extend({
 	},
 	render: function() {
 		// Append the template to this View's element (li.apm-search-result) and return.
+		console.log('this is happening!');
 		return this.$el.append( this.template( this.model.toJSON() ) );
 	},
 	events: {
-		// TODO: MAKE THIS WORK.
-		'click .apm-search-result': 'addToPost'
+		'click': 'addToPost'
 	},
 	addToPost: function(e) {
 		console.log( 'I have been clicked!', this.model.toJSON() );
